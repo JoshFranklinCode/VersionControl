@@ -1,0 +1,552 @@
+
+/*
+ * File Name:	Calculator.java
+ * Names:		Joshua Franklin
+ * Course:		COP 2800C at Valencia College
+ * Professor:	David Stendel
+ * Description:	This program will display a menu to the user with various choices including
+ * 				gathering multiple user input numbers to use for the rest of the program, adding
+ * 				the inputs together, finding the average of the inputs, subtracting each input
+ * 				after the first one, multiplying the inputs by each other, dividing each input by
+ * 				the next, finding which input is negative and which is positive or whether one or
+ * 				the other is zero, finding the largest value within an array, and exiting the
+ * 				program entirely. Any choice can be made by entering the letter in the parentheses
+ * 				within the menu, upper-case or lower-case both being accepted. Attempting to select
+ * 				a choice before using "G/g" to gather their numbers will prompt the user to enter
+ * 				g first, otherwise the user can exit the program with "X/x". Afterwards, attempting
+ * 				to enter an option that is not listed will result in an error, prompting the user
+ * 				to input a valid choice and	bringing them back to the menu. Attempting to divide by
+ * 				zero will result in an error, telling the user that they cannot divide by zero and
+ * 				bringing them back to the menu. The program will repeatedly show the menu unless
+ * 				the user decides to exit the program. If the user chooses to exit the program at
+ * 				any point, they will be met with a good-bye message and the program will terminate.
+ * Date:		2/3/21 - Began creating program.
+ * 				2/4/21 - Added error messages for division by 0 and "Invalid choice!"
+ * 				2/5/21 - Changed all if-else statements to "switch (choice)". Added "n(E)gative/
+ * 						 positive" and "(C)ompare Sizes" lines.
+ * 				2/11/21- Changed system to a do-while loop, edited menu layout, added "(G)et two
+ * 						 numbers" menu option and code, as per new instructions.
+ * 				2/12/21- Added another do-while loop to the beginning of the program. A (hopefully)
+ * 						 temporary fix while I figure out how to get the If statement not to repeat
+ * 						 in the main loop.
+ * 						 Deleted the extra do-while loop and implemented an else-if statement that
+ * 						 executes only if certain conditions are met, preventing repeat executions.
+ * 				2/13/21- Changed class name to an upper-case, created new package, added header
+ * 						 comments. Changed nested if-else statements within case e to be more
+ * 						 concise.
+ * 				2/18/21- Began changing program to use more than two numbers with an array. Changed
+ * 						 majority of program to use nested for loops within the case.
+ * 				2/19/21- Implemented cases 'c' 'e' and 'd' using the new array. Case 'c' is still
+ * 						 using stacked if structures.
+ * 				2/20/21- Changed case 'c' to use if-else structures instead.
+ * 				3/7/21 - Began work on creating method-based Calculator. Completed addition,
+ * 						 subtraction, and multiplication methods, although unfinished.
+ * 				3/8/21 - Completed division method and average methods, although unfinished.
+ * 						 Note: Change average to find the average within // Calculation
+ * 						 instead of //Output.
+ * 				3/10/21- Changed methods to only do calculations and give results. Text output is
+ * 						 done in the major call method now. Added methods to check for zeros when
+ * 						 dividing, find the largest number in the array, and determine positive,
+ * 						 negative, or zero. Added error and good-bye messages. Added a "flag"
+ * 						 method to check if numbers have already been input by the user.
+ * 				3/11/21- Added method responsible for printing out all answers regarding addition,
+ * 						 subtraction, multiplication, division, and average. This method is called
+ * 						 by the calculatorMenuProcessing method within each case.
+ * 				3/14/21- General cleaning up and formatting. Added method headers.
+ */
+package calculator;
+
+// Packages
+import java.util.Scanner;
+
+/**
+ * Public class Calculator: This class is used to run the calculator and display a menu to the user
+ * 				with various choices including gathering multiple user input numbers to use for the
+ * 				rest of the program, adding	the inputs together, finding the average of the inputs,
+ * 				subtracting each input after the first one, multiplying the inputs by each other,
+ * 				dividing each input by the next, finding which input is negative and which is
+ * 				positive or whether one or the other is zero, finding the largest value within an
+ * 				array, and exiting the program entirely. Any choice can be made by entering the
+ * 				letter in the parentheses within the menu, upper-case or lower-case both being
+ * 				accepted. Attempting to select a choice before using "G/g" to gather their numbers
+ * 				will prompt the user to enter g first, otherwise the user can exit the program with
+ * 				"X/x". Afterwards, attempting to enter an option that is not listed will result in
+ * 				an error, prompting the user to input a valid choice and bringing them back to
+ * 				the menu. Attempting to divide by zero will result in an error, telling the user
+ * 				that they cannot divide by zero and bringing them back to the menu. The program
+ * 				will repeatedly show the menu unless the user decides to exit the program. If the
+ * 				user chooses to exit the program at any point, they will be met with a good-bye
+ * 				message and the program will terminate.
+ * 
+ * @author Joshua Franklin
+ * @version  (4.18.0) 3/14/21
+ */
+public class Calculator {
+	
+	/**
+	 * Running the main method will display a menu to the user with various choices including
+	 * gathering multiple user input numbers to use for the rest of the program, adding the inputs
+	 * together, finding the average of the inputs, subtracting each input after the first one,
+	 * multiplying the inputs by each other, dividing each input by the next, finding which input
+	 * is negative and which is positive or whether one or the other is zero, finding the largest
+	 * value within an array, and exiting the program entirely. Any choice can be made by entering
+	 * the letter in the parentheses within the menu, upper-case or lower-case both being
+	 * accepted. Attempting to select a choice before using "G/g" to gather their numbers
+	 * will prompt the user to enter g first, otherwise the user can exit the program with
+	 * "X/x". Afterwards, attempting to enter an option that is not listed will result in
+	 * an error, prompting the user to input a valid choice and bringing them back to
+	 * the menu. Attempting to divide by zero will result in an error, telling the user
+	 * that they cannot divide by zero and bringing them back to the menu. The program
+	 * will repeatedly show the menu unless the user decides to exit the program. If the
+	 * user chooses to exit the program at any point, they will be met with a good-bye
+	 * message and the program will terminate.
+	 * 
+	 * @param args A String array containing any command line options.
+	 */
+	// Main Method
+	public static void main(String[] args) {
+		// Constants - Variables
+		Scanner input = new Scanner(System.in);
+		double[] userNumber = new double[3]; // Amount of user numbers are changed here.
+		char choice = 0;
+		boolean checkForNumbers = false; // Flag for checking if method getuserNumber has been run.
+
+		do {
+			choice = calculatorMenu(choice, input);
+			if (choice == 'G' || choice == 'g') {
+			userNumber = getuserNumber(userNumber, input);
+			checkForNumbers = alreadyGotNumbers(checkForNumbers);
+			} else {
+				calculatorMenuProcessing(checkForNumbers, choice, userNumber);
+			}
+		} while (choice != 'X' && choice != 'x');
+	}
+	
+	/**
+	 * This method will calculate the sum of the users inputs.
+	 * 
+	 * @param sum Set to the total sum of the added numbers.
+	 * @param userNumber The array of the user input Numbers.
+	 * @return sum is returned.
+	 */
+	// Addition Method
+	public static double additionProcessing(double sum, double[] userNumber) {
+		for (int i = 1; i < userNumber.length; ++i) {
+			// Calculation
+			sum = sum + userNumber[i];
+		}
+		return sum;
+	}
+
+	/**
+	 * This method will determine whether or not the user has previously input numbers.
+	 * 
+	 * @param checkForNumbers A flag used to determine the state of the method getUserNumbers.
+	 * @return checkForNumbers is returned as true or false depending on if getUserNumber has been
+	 * called or not.
+	 */
+	// Got Numbers Validation Method
+	public static boolean alreadyGotNumbers(boolean checkForNumbers) {
+		checkForNumbers = true; // Becomes true if getuserNumber has been called.
+		return checkForNumbers;
+	}
+
+	/**
+	 * This method will calculate the average of the users input numbers.
+	 * 
+	 * @param sum Set to the total sum of the added numbers.
+	 * @param average Set to the total sum of the added numbers divided by the length of the array.
+	 * @param userNumber The array of the user input Numbers.
+	 * @param COUNT The length of the array.
+	 * @return The average is returned.
+	 */
+	// Average Method
+	public static double averageProcessing(double sum, double average, double[] userNumber,
+			final int COUNT) {
+			for (int i = 1; i < userNumber.length; ++i) {
+				// Calculation
+				sum = sum + userNumber[i];
+			}
+			average = sum / COUNT;
+			return average;
+		}
+		
+	/**
+	 * This method will display the Calculator Menu options to the user.
+	 * 
+	 * @param choice The character used to determine the user's letter input.
+	 * @param input The scanner used to accept the users choice input.
+	 * @return The users choice is returned to determine future method executions.
+	 */
+	// Calculator Menu - Input Method
+	public static char calculatorMenu(char choice, Scanner input) {
+		System.out.println("\tCalculator Menu\n");
+		System.out.println("(G)et two numbers.");
+		System.out.println("(A)dd.");
+		System.out.println("(S)ubtract.");
+		System.out.println("(M)ultiply.");
+		System.out.println("(D)ivide.");
+		System.out.println("a(V)erage");
+		System.out.println("(F)ind largest.");
+		System.out.println("n(E)gative/positive/zero.");
+		System.out.println("e(X)it.");
+		System.out.print("Choice: ");
+		choice = input.next().charAt(0);
+		System.out.println();
+		return choice;
+	}
+	
+	/**
+	 * This method is responsible for determining what happens depending on the users choice and
+	 * input numbers. May also display errors to the user if certain conditions are not met.
+	 * 
+	 * @param checkForNumbers Determines if numbers have been given. If not, the user will be
+	 * prompted to enter numbers first.
+	 * @param choice Determines which option will be executed by the method.
+	 * @param userNumber The array of the user input Numbers.
+	 */
+	// Main Menu Calculations Method
+	public static void calculatorMenuProcessing(boolean checkForNumbers, char choice,
+			double[] userNumber) {
+		// Constants - Variables
+		double sum = 0.0, difference = 0.0, product = 0.0, quotient = 0.0, average = 0.0,
+				max = 0.0;
+		final int COUNT = userNumber.length;
+		boolean optionChosen = false, canDivide = true;
+
+		if (checkForNumbers) {
+			switch (choice) {
+			// Addition
+			case 'A' :
+			case 'a' :
+				if (optionChosen == false) { // Used to check if a choice was previously entered.
+					sum = userNumber[0];
+					// Calculation
+					sum = additionProcessing(sum, userNumber);
+					// Output
+					equationOutput(choice, sum, difference, product, quotient, average, max,
+							userNumber, COUNT, optionChosen);
+				}
+				optionChosen = true;
+			// Subtraction
+			case 'S' :
+			case 's' :
+				if (optionChosen == false) {
+					difference = userNumber[0];
+					// Calculation
+					difference = subtractionProcessing(difference, userNumber);
+					// Output
+					equationOutput(choice, sum, difference, product, quotient, average, max,
+							userNumber, COUNT, optionChosen);
+				}
+				optionChosen = true;
+			// Multiplication
+			case 'M' :
+			case 'm' :
+				if (optionChosen == false) {
+					product = userNumber[0];
+					// Calculation
+					product = multiplicationProcessing(product, userNumber);
+					// Output
+					equationOutput(choice, sum, difference, product, quotient, average, max,
+							userNumber, COUNT, optionChosen);
+				}
+				optionChosen = true;
+			// Division
+			case 'D' :
+			case 'd' :
+				if (optionChosen == false) {
+					canDivide = checkForZero(canDivide, userNumber);
+				if (canDivide) {
+					quotient = userNumber[0];
+					// Calculation
+					quotient = divisionProcessing(quotient, userNumber);
+					// Output
+					equationOutput(choice, sum, difference, product, quotient, average, max,
+							userNumber, COUNT, optionChosen);
+				} else {
+					System.out.println("\t Error: Cannot divide by zero!\n");
+					}
+				}
+				optionChosen = true;
+			// Average
+			case 'V' :
+			case 'v' :
+				if (optionChosen == false) {
+					sum = userNumber[0];
+					// Calculation
+					average = averageProcessing(sum, average, userNumber, COUNT);
+					// Output
+					equationOutput(choice, sum, difference, product, quotient, average, max,
+							userNumber, COUNT, optionChosen);
+				}
+				optionChosen = true;
+			// Largest Value
+			case 'F' : 
+			case 'f' : 
+				if (optionChosen == false) {
+					max = userNumber[0];
+					// Determination
+					max = findLargest(max, userNumber);
+					// Output
+					equationOutput(choice, sum, difference, product, quotient, average, max,
+							userNumber, COUNT, optionChosen);
+				}
+				optionChosen = true;
+			// Validation
+			case 'E' :
+			case 'e' :
+				if (optionChosen == false) {
+					checkModifier(userNumber);
+				}
+				optionChosen = true;
+			// Error & Good-Bye Messages
+			default:
+				if (optionChosen == false) {
+					// Outputs
+					if (choice == 'X' || choice == 'x') {
+						System.out.println("Thank you for using Joshua's calculator!");
+					} else {
+				System.out.println("\tError: Invalid choice!\n");
+					}
+				}
+			}
+		} else if (choice == 'X' || choice == 'x') {
+			System.out.println("Thank you for using Joshua's calculator!");
+			} else {
+				System.out.println("\tError: Please enter 'G' and your numbers!\n");
+		}
+	}
+	
+	/**
+	 * This method will determine if the second or onward numbers are zero.
+	 * 
+	 * @param canDivide Checks if the userNumbers array can be divided depending on whether or not
+	 * a zero exists past the first value.
+	 * @param userNumber The array of the user input Numbers.
+	 * @return The variable canDivide is returned to determine if the values can be divided.
+	 */
+	//Checking for Zero Method
+	public static boolean checkForZero(boolean canDivide, double[] userNumber) {
+		for (int i = 1; i < userNumber.length; i++) {
+			if (userNumber[i] == 0) {
+				canDivide = false;
+			}
+		}
+		return canDivide;
+	}	
+	
+	/**
+	 * This method will determine the positive, negative, or zero values entered by the user.
+	 * 
+	 * @param userNumber The array of the user input Numbers.
+	 */
+	// Validation Method
+	public static void checkModifier(double[] userNumber) {
+		for (int i = 0; i < userNumber.length; i++) {
+			// Output
+			if (userNumber[i] < 0) {
+				System.out.print("The number " + userNumber[i] + " is negative.\n");
+				} else if (userNumber[i] == 0){
+					System.out.print("The number " + userNumber[i] + " is zero.\n");
+					} else {
+						System.out.print("The number " + userNumber[i] + " is positive.\n");
+			}
+		}
+	System.out.println();
+	}
+	
+	/**
+	 * This method will divide the users input numbers.
+	 * 
+	 * @param quotient Set to the value of the divided array.
+	 * @param userNumber The array of the user input Numbers.
+	 * @return The quotient is returned.
+	 */
+	// Division Method
+	public static double divisionProcessing(double quotient, double[] userNumber) {
+		//Note: This method does not validate 'cannot divide by zero' issue.
+		for (int i = 1; i < userNumber.length; ++i) {
+			// Calculation
+			quotient = quotient / userNumber[i];
+		}
+		return quotient;
+	}
+	
+	/**
+	 * This method is responsible for outputting all text based on the users choices and input
+	 * numbers
+	 * 
+	 * @param choice The character used to determine the user's letter input.
+	 * @param sum Set to the total sum of the added numbers.
+	 * @param difference Set to the total difference of the subtracted numbers.
+	 * @param product Set to the total product of the multiplied numbers.
+	 * @param quotient Set to the total quotient of the divided numbers.
+	 * @param average Set to the total sum of the added numbers divided by the userNumber length.
+	 * @param max Set to the highest value in the array.
+	 * @param userNumber The array of the user input Numbers.
+	 * @param COUNT Set to the length of the userNumber array.
+	 * @param optionChosen Checks whether or not a previous choice has been made in the menu.
+	 */
+	// Equation Output Method
+	public static void equationOutput(char choice, double sum, double difference, double product,
+			double quotient, double average, double max, double[] userNumber, final int COUNT,
+			boolean optionChosen) {
+		switch (choice) {
+		// Addition
+		case 'A' :
+		case 'a' :
+			if (optionChosen == false) {
+			// Output
+			System.out.printf("Answer: " + "%.3f + ", userNumber[0]);
+			for (int i = 1; i < userNumber.length; ++i) {
+				if (i < userNumber.length - 1) {
+					System.out.printf("%.3f + ", userNumber[i]);
+				} else {
+					System.out.printf("%.3f" + " = %.3f\n\n", userNumber[i], sum);
+					}
+				}
+			}
+			optionChosen = true;
+		// Subtraction
+		case 'S' :
+		case 's' :
+			if (optionChosen == false) {
+				// Output
+				System.out.printf("Answer: " + "%.3f - ", userNumber[0]);
+				for (int i = 1; i < userNumber.length; ++i) {
+					if (i < userNumber.length - 1) {
+						System.out.printf("%.3f - ", userNumber[i]);
+					} else {
+						System.out.printf("%.3f" + " = %.3f\n\n", userNumber[i], difference);
+					}
+				}
+			}
+			optionChosen = true;
+		// Multiplication
+		case 'M' :
+		case 'm' :
+			if (optionChosen == false) {
+				// Output
+				System.out.printf("Answer: " + "%.3f * ", userNumber[0]);
+				for (int i = 1; i < userNumber.length; ++i) {
+					if (i < userNumber.length - 1) {
+						System.out.printf("%.3f * ", userNumber[i]);
+					} else {
+						System.out.printf("%.3f" + " = %.3f\n\n", userNumber[i], product);
+					}
+				}
+			}
+			optionChosen = true;
+		// Division
+		case 'D' :
+		case 'd' :
+			if (optionChosen == false) {
+				// Output
+				System.out.printf("Answer: " + "%.3f / ", userNumber[0]);
+				for (int i = 1; i < userNumber.length; ++i) {
+					if (i < userNumber.length - 1) {
+						System.out.printf("%.3f / ", userNumber[i]);
+					} else {
+						System.out.printf("%.3f" + " = %.3f\n\n", userNumber[i], quotient);
+					}
+				}
+			}
+			optionChosen = true;
+		// Average
+		case 'V' :
+		case 'v' :
+			if (optionChosen == false) {
+				// Output
+				System.out.printf("Answer: " + "%.3f + ", userNumber[0]);
+				for (int i = 1; i < userNumber.length; ++i) {
+					if (i < userNumber.length - 1) {
+						System.out.printf("%.3f + ", userNumber[i]);
+					} else {
+						System.out.printf("%.3f / " + COUNT + " = %.3f\n\n", userNumber[i],
+								average);
+					}
+				}
+			}
+			optionChosen = true;
+		// Largest Value
+		case 'F' : 
+		case 'f' : 
+			if (optionChosen == false) {
+				// Output
+				System.out.printf("The largest number in your array is " +  "%.3f\n\n", max);
+			}
+			optionChosen = true;
+		}
+	}
+	
+	/**
+	 * This method will find the largest value in the users given input numbers.
+	 * 
+	 * @param max Set to the largest value within the userNumber array.
+	 * @param userNumber The array of the user input Numbers.
+	 * @return The max value is returned.
+	 */
+	// Find Largest Number Method
+	public static double findLargest(double max, double[] userNumber) {
+		for (int i = 1; i < userNumber.length; i++) {
+			// Determination
+			if (userNumber[i] > max) {
+				max = userNumber[i];
+			}
+		}
+		return max;
+	}
+		
+	/**
+	 * This method will ask for and take in the users desired input numbers that will be used for
+	 * the rest of the program.
+	 * 
+	 * @param userNumber The array of the user input Numbers.
+	 * @param input the Scanner used to accept the users input numbers.
+	 * @return The array userNumber is returned.
+	 */
+	// Get User Number - Input Method
+	public static double[] getuserNumber(double[] userNumber, Scanner input) {
+		System.out.print("Enter " + userNumber.length + " numbers seperated with a space: ");
+		for (int i = 0; i < userNumber.length; ++i) {
+			userNumber[i] = input.nextDouble();
+		}
+		System.out.println();
+		return userNumber;
+	}
+	
+	/**
+	 * This method will multiply the users input numbers by each other until the final product is
+	 * found.
+	 * 
+	 * @param product Set to the total value of the multiplied input numbers.
+	 * @param userNumber The array of the user input Numbers.
+	 * @return The product is returned.
+	 */
+	// Multiplication Method
+	public static double multiplicationProcessing(double product, double[] userNumber) {
+		for (int i = 1; i < userNumber.length; ++i) {
+			// Calculation
+			product = product * userNumber[i];
+		}
+		return product;
+	}
+	
+	/**
+	 * This method will subtract each of the users input numbers by the nest until the final
+	 * difference is found.
+	 * 
+	 * @param difference Set to the total difference between all numbers.
+	 * @param userNumber The array of the user input Numbers.
+	 * @return The difference is returned.
+	 */
+	// Subtraction Method
+	public static double subtractionProcessing(double difference, double[] userNumber) {
+		for (int i = 1; i < userNumber.length; ++i) {
+			// Calculation
+			difference = difference - userNumber[i];
+		}
+		return difference;
+	}
+}
